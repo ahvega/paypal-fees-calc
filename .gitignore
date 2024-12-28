@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+*.log
+.env
+# Python
+__pycache__/
+*.py[cod]
+*.class
+.Python
+.env/
+.venv/
+venv/
+ENV/

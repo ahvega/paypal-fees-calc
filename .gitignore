@@ -1,13 +1,8 @@
-.DS_Store
-Thumbs.db
+node_modules
+dist
+.cache
+.vscode/
+.idea/
 *.log
-.env
-# Python
-__pycache__/
-*.py[cod]
-*.class
-.Python
-.env/
-.venv/
-venv/
-ENV/
+config.js
+*.map

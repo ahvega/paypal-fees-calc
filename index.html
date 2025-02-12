@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Calculate PayPal fees accurately for different countries and transaction types. Supports multiple currencies and includes transfer fee calculations.">
+    <title>PayPal Fee Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;600;800&family=Geist+Mono:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="noopener">
+<style>
+    body {
+        font-family: 'Geist', sans-serif;
+        font-weight: 300;
+    }
+    b, strong {
+        font-weight: 600;
+    }
+    .number-field {
+        font-family: 'Geist Mono', monospace;
+        font-weight: 600;
+    }
+</style>
+</head>
+
+<body class="min-h-screen bg-base-200">
+    <!-- Header Section -->
+    <header class="sticky top-0 z-10 bg-base-200/80 backdrop-blur border-b border-base-content/10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-3xl md:text-4xl font-bold">PayPal Fee Calculator</h1>
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                </label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><button id="theme-toggle-1">Toggle Theme</button></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
+        <!-- Left Sidebar -->
+        <div class="w-full md:w-96 bg-base-300 p-4 md:p-6 border-b md:border-r border-base-content/10 overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4 md:mb-6 text-primary">Parameters</h2>
+
+            <form id="calculatorForm" class="space-y-6">
+                <!-- Amount Input -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-lg">Desired Net Amount</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-addon px-4 bg-base-200 text-lg" id="currency-symbol">$</span>
+                        <input type="number" id="amount" class="input input-bordered w-full text-lg"
+                            placeholder="Enter amount" step="0.01" min="0" class="rounded-md">
+                    </div>
+                </div>
+
+                <!-- Country Selector -->
+                <div class="form-control">
+                    <label class="label" for="country">
+                        <span class="label-text text-lg">Merchant Country</span>
+                    </label>
+                    <select id="country" class="select select-bordered w-full text-lg"
+                        aria-label="Select merchant country">
+                        <option value="" disabled selected>Select country</option>
+                    </select>
+                </div>
+
+                <!-- Currency Selector -->
+                <div class="form-control">
+                    <label class="label" for="currency">
+                        <span class="label-text text-lg">Currency</span>
+                    </label>
+                    <select id="currency" class="select select-bordered w-full text-lg" aria-label="Select currency">
+                        <option value="" disabled selected>Select currency</option>
+                    </select>
+                </div>
+
+                <!-- Transaction Type -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-lg">Transaction Type</span>
+                    </label>
+                    <div class="flex gap-4">
+                        <label class="cursor-pointer label justify-start gap-2">
+                            <input type="radio" name="transaction-type" class="radio radio-primary" value="domestic"
+                                checked>
+                            <span class="label-text text-lg">Domestic</span>
+                        </label>
+                        <label class="cursor-pointer label justify-start gap-2">
+                            <input type="radio" name="transaction-type" class="radio radio-primary"
+                                value="international">
+                            <span class="label-text text-lg">International</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Transfer Fee -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-lg">Include Transfer Fee?</span>
+                        <span class="tooltip tooltip-info" data-tip="Additional fee for withdrawing money from PayPal">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                class="w-4 h-4 stroke-current">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </span>
+                    </label>
+                    <label class="cursor-pointer label justify-start gap-2">
+                        <input type="checkbox" id="include-transfer-fee" class="toggle toggle-primary" />
+                        <span class="sr-only">Include Transfer Fee</span>
+                    </label>
+                </div>
+
+                <div class="form-control" id="transfer-type-select" style="display: none;">
+                    <label class="label">
+                        <span class="label-text text-lg">Transfer Type</span>
+                    </label>
+                    <select id="transfer-type" class="select select-bordered w-full text-lg">
+                        <option value="card" selected>Debit card withdrawal</option>
+                        <option value="us_bank">US Bank account</option>
+                        <option value="intl_bank">International bank account</option>
+                    </select>
+                </div>
+
+                <!-- Rounding Precision -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text text-lg">Rounding Precision</span>
+                    </label>
+                    <input type="number" id="rounding-precision" class="input input-bordered w-full text-lg"
+                        placeholder="Enter precision (e.g., 5 or 10)" value="5" min="1" class="rounded-md">
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="flex-1 p-8 overflow-y-auto">
+            <!-- Header Section -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-5xl font-bold">PayPal Fee Calculator</h1>
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost btn-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h7" />
+                        </svg>
+                    </label>
+                    <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><button id="theme-toggle">Toggle Theme</button></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mb-8 text-lg">
+                <p>Calculate how much you need to charge your payee via PayPal if you want to get no lesss than a
+                    certain amount.</p>
+                <p>This utility calculates PayPal Fees using the latest rules as of
+                    <a href="https://www.paypal.com/us/legalhub/paypal/archive-policies-full?country.x=US&locale.x=en_US" target="_blank" rel="noopener" class="tooltip" data-tip="PayPal.com">
+                        December 2024
+                        <svg class="w-4 h-4 inline-block ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="currentColor" d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
+                        </svg>
+                    </a>
+                </p>
+            </div>
+
+            <!-- Results Section -->
+            <div class="grid grid-cols-3 gap-6 mb-8">
+                <div class="stats shadow bg-primary text-primary-content">
+                    <div class="stat">
+                        <div class="stat-title text-2xl font-bold text-primary-content/90">Gross Amount</div>
+                        <div class="stat-value text-4xl number-field" id="gross-amount">-</div>
+                    </div>
+                </div>
+
+                <div class="stats shadow bg-secondary text-secondary-content">
+                    <div class="stat">
+                        <div class="stat-title text-2xl font-bold text-secondary-content/90">Total Fees</div>
+                        <div class="stat-value text-4xl number-field" id="total-fees">-</div>
+                    </div>
+                </div>
+
+                <div class="stats shadow bg-accent text-accent-content">
+                    <div class="stat">
+                        <div class="stat-title text-2xl font-bold text-accent-content/90">Net Amount</div>
+                        <div class="stat-value text-4xl number-field" id="net-amount">-</div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-sm opacity-70"><strong>Gross Amount:</strong> This is the amount you should charge your payee.</p>
+            <p class="text-sm opacity-70"><strong>Total Fees:</strong> The total fees charged by PayPal.</p>
+            <strong class="text-sm opacity-70"><strong>Net Amount:</strong> The amount you will receive after fees.</p>
+            <!-- Fee Breakdown -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-6">Fee Breakdown</h2>
+                    <div class="space-y-4 text-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Percentage Fee:</span>
+                            <span id="percentage-fee" class="text-xl number-field">-</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Fixed Fee:</span>
+                            <span id="fixed-fee" class="text-xl number-field">-</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Transfer Fee:</span>
+                            <span id="transfer-fee" class="text-xl number-field">-</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Rounded Gross Amount:</span>
+                            <span id="rounded-gross-amount" class="text-xl number-field">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js" type="module"></script>
+    <script src="app.js" type="module"></script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+
+</html>

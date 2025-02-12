@@ -200,6 +200,24 @@ function initEventListeners() {
     roundingPrecisionInput.addEventListener('change', calculateFees);
 }
 
+// Handle window resize and orientation change
+function handleWindowResize() {
+    document.body.style.fontSize = Math.min(16, window.innerHeight / 60) + 'px';
+}
+
+function handleOrientationChange() {
+    if (window.innerHeight > window.innerWidth) {
+        document.body.classList.add('portrait');
+        document.body.classList.remove('landscape');
+    } else {
+        document.body.classList.add('landscape');
+        document.body.classList.remove('portrait');
+    }
+}
+
+window.addEventListener('resize', handleWindowResize);
+window.addEventListener('orientationchange', handleOrientationChange);
+
 // Initialize app
 function init() {
     initDropdowns();
@@ -207,6 +225,8 @@ function init() {
     initThemeToggle();
     initEventListeners();
     calculateFees();
+    handleWindowResize();
+    handleOrientationChange();
 }
 
 init();

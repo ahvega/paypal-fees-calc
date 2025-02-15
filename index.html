@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Calculate PayPal fees accurately for different countries and transaction types. Supports multiple currencies and includes transfer fee calculations.">
+    <meta name="description" content="Calculate PayPal fees accurately for different countries and transaction types. Supports multiple currencies and includes transfer fee calculations.">
     <title>PayPal Fee Calculator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,13 +17,17 @@
             font-family: 'Geist', sans-serif;
             font-weight: 300;
         }
-        b, strong {
+        
+        b,
+        strong {
             font-weight: 800;
         }
+        
         .number-field {
             font-family: 'Geist Mono', monospace;
             font-weight: 600;
         }
+        
         @media (max-width: 640px) {
             .grid-cols-3 {
                 grid-template-columns: 1fr !important;
@@ -35,11 +38,57 @@
                 align-items: center;
             }
         }
+        
         @media (min-width: 641px) {
             /* On larger devices, stack the description below the colored box */
             .card-container {
                 flex-direction: column;
             }
+        }
+        
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .container {
+            background-color: #2d2d2d;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        input,
+        select {
+            background-color: #3d3d3d;
+            color: #e0e0e0;
+            border: 1px solid #4d4d4d;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #4d4d4d;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #5d5d5d;
+        }
+        
+        .result {
+            color: lightgray;
+            text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
     </style>
 </head>
@@ -77,8 +126,7 @@
                     </label>
                     <div class="input-group">
                         <span class="input-group-addon px-4 bg-base-200 text-lg" id="currency-symbol">$</span>
-                        <input type="number" id="amount" class="input input-bordered w-full text-lg"
-                            placeholder="Enter amount" step="0.01" min="0">
+                        <input type="number" id="amount" class="input input-bordered w-full text-lg" placeholder="Enter amount" step="0.01" min="0">
                     </div>
                 </div>
 
@@ -87,8 +135,7 @@
                     <label class="label" for="country">
                         <span class="label-text text-lg">Merchant Country</span>
                     </label>
-                    <select id="country" class="select select-bordered w-full text-lg"
-                        aria-label="Select merchant country">
+                    <select id="country" class="select select-bordered w-full text-lg" aria-label="Select merchant country">
                         <option value="" disabled selected>Select country</option>
                     </select>
                 </div>
@@ -156,8 +203,7 @@
                     <label class="label">
                         <span class="label-text text-lg">Rounding Precision</span>
                     </label>
-                    <input type="number" id="rounding-precision" class="input input-bordered w-full text-lg"
-                        placeholder="Enter precision (e.g., 5 or 10)" value="5" min="1">
+                    <input type="number" id="rounding-precision" class="input input-bordered w-full text-lg" placeholder="Enter precision (e.g., 5 or 10)" value="5" min="1">
                 </div>
             </form>
         </div>
@@ -193,7 +239,7 @@
                     <div class="result-card stats shadow bg-primary text-primary-content">
                         <div class="stat">
                             <div class="stat-title text-2xl font-bold text-primary-content/90">Gross Amount</div>
-                            <div class="stat-value text-4xl number-field" id="gross-amount">-</div>
+                            <div class="result stat-value text-4xl number-field" id="gross-amount">-</div>
                         </div>
                     </div>
                     <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">
@@ -206,7 +252,7 @@
                     <div class="result-card stats shadow bg-secondary text-secondary-content">
                         <div class="stat">
                             <div class="stat-title text-2xl font-bold text-secondary-content/90">Total Fees</div>
-                            <div class="stat-value text-4xl number-field" id="total-fees">-</div>
+                            <div class="result stat-value text-4xl number-field" id="total-fees">-</div>
                         </div>
                     </div>
                     <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">
@@ -219,7 +265,7 @@
                     <div class="result-card stats shadow bg-accent text-accent-content">
                         <div class="stat">
                             <div class="stat-title text-2xl font-bold text-accent-content/90">Net Amount</div>
-                            <div class="stat-value text-4xl number-field" id="net-amount">-</div>
+                            <div class="result text-4xl number-field" id="net-amount">-</div>
                         </div>
                     </div>
                     <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">

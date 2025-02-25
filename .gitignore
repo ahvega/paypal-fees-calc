@@ -7,3 +7,12 @@ dist
 config.js
 *.map
 package-lock.json
+.env
+.DS_Store
+Thumbs.db
+coverage/
+*.bak
+*.tmp
+*.swp
+.editorconfig
+.gitattributes

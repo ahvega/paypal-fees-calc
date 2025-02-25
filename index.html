@@ -1,17 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Calculate PayPal fees accurately for different countries and transaction types. Supports multiple currencies and includes transfer fee calculations.">
-    <title>PayPal Fee Calculator</title>
+    <meta name="keywords" content="PayPal, fee calculator, payment fees, transaction fees, PayPal charges">
+    <meta name="author" content="PayPal Fee Calculator">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#1a1a1a">
+
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="PayPal Fee Calculator">
+    <meta property="og:description" content="Calculate PayPal fees accurately for different countries and transaction types. Supports multiple currencies and includes transfer fee calculations.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://paypalcalculator.com">
+    <meta property="og:image" content="https://paypalcalculator.com/img/og-image.png">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PayPal Fee Calculator">
+    <meta name="twitter:description" content="Calculate PayPal fees accurately for different countries and transaction types.">
+    <meta name="twitter:image" content="https://paypalcalculator.com/img/og-image.png">
+
+    <title>PayPal Fee Calculator - Calculate Transaction Fees Accurately</title>
+    <link rel="canonical" href="https://paypalcalculator.com">
+
+    <!-- Preload critical resources with correct attributes -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@600&family=Geist:wght@300;700&display=swap" as="style">
+    <link rel="preload" href="js/config.js" as="script" type="module" crossorigin>
+    <link rel="preload" href="js/app.js" as="script" type="module" crossorigin>
+
+    <!-- Stylesheets -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;800;800&family=Geist+Mono:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@600&family=Geist:wght@300;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet noopener">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="noopener">
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PayPal Fee Calculator",
+      "description": "Calculate PayPal fees accurately for different countries and transaction types.",
+      "url": "https://paypalcalculator.com",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
     <style>
         body {
             font-family: 'Geist', sans-serif;
@@ -20,7 +65,7 @@
 
         b,
         strong {
-            font-weight: 800;
+            font-weight: 700;
         }
 
         .number-field {
@@ -46,42 +91,33 @@
             }
         }
 
-        body {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', sans-serif;
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
-        .container {
-            background-color: #2d2d2d;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* Add sticky header styles */
+        .sticky-header {
+            position: fixed; /* Change from sticky to fixed */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(26, 26, 26, 0.8); /* Darker background with opacity */
         }
 
-        input,
-        select {
-            background-color: #3d3d3d;
-            color: #e0e0e0;
-            border: 1px solid #4d4d4d;
-            padding: 0.5rem;
-            border-radius: 4px;
+        /* Add padding to account for fixed header */
+        .main-content {
+            padding-top: 64px; /* Adjust this value based on your header height */
         }
 
-        button {
-            background-color: #4d4d4d;
-            color: #ffffff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        /* Add scroll margin to account for fixed header */
+        .scroll-margin {
+            scroll-margin-top: 100px; /* Adjust this value to match your needs */
         }
 
-        button:hover {
-            background-color: #5d5d5d;
-        }
-
+        /* Restore result styles */
         .result {
             color: lightgray;
             text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
@@ -94,9 +130,9 @@
 </head>
 
 <body class="min-h-screen bg-base-200">
-    <!-- Header Section -->
-    <header class="sticky top-0 z-10 bg-base-200/80 backdrop-blur border-b border-base-content/10">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <!-- Move header to top -->
+    <header class="sticky-header">
+        <div class="w-full px-4 py-4 flex justify-between items-center">
             <h1 class="text-3xl md:text-4xl font-bold">PayPal Fee Calculator</h1>
             <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -113,196 +149,254 @@
         </div>
     </header>
 
-    <div class="flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
-        <!-- Left Sidebar -->
-        <div class="w-full md:w-96 bg-base-300 p-4 md:p-6 border-b md:border-r border-base-content/10 overflow-y-auto">
-            <h2 class="text-2xl font-bold mb-4 md:mb-6 text-primary">Parameters</h2>
-
-            <form id="calculatorForm" class="space-y-6">
-                <!-- Amount Input -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text text-lg">Desired Net Amount</span>
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-addon px-4 bg-base-200 text-lg" id="currency-symbol">$</span>
-                        <input type="number" id="amount" class="input input-bordered w-full text-lg" placeholder="Enter amount" step="0.01" min="0">
-                    </div>
-                </div>
-
-                <!-- Country Selector -->
-                <div class="form-control">
-                    <label class="label" for="country">
-                        <span class="label-text text-lg">Merchant Country</span>
-                    </label>
-                    <select id="country" class="select select-bordered w-full text-lg" aria-label="Select merchant country">
-                        <option value="" disabled selected>Select country</option>
-                    </select>
-                </div>
-
-                <!-- Currency Selector -->
-                <div class="form-control">
-                    <label class="label" for="currency">
-                        <span class="label-text text-lg">Currency</span>
-                    </label>
-                    <select id="currency" class="select select-bordered w-full text-lg" aria-label="Select currency">
-                        <option value="" disabled selected>Select currency</option>
-                    </select>
-                </div>
-
-                <!-- Transaction Type -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text text-lg">Transaction Type</span>
-                    </label>
-                    <div class="flex gap-4">
-                        <label class="cursor-pointer label justify-start gap-2">
-                            <input type="radio" name="transaction-type" class="radio radio-primary" value="domestic"
-                                checked>
-                            <span class="label-text text-lg">Domestic</span>
-                        </label>
-                        <label class="cursor-pointer label justify-start gap-2">
-                            <input type="radio" name="transaction-type" class="radio radio-primary"
-                                value="international">
-                            <span class="label-text text-lg">International</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Transfer Fee -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text text-lg">Include Transfer Fee?</span>
-                        <span class="tooltip tooltip-info" data-tip="Additional fee for withdrawing money from PayPal">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                class="w-4 h-4 stroke-current">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </span>
-                    </label>
-                    <label class="cursor-pointer label justify-start gap-2">
-                        <input type="checkbox" id="include-transfer-fee" class="toggle toggle-primary" />
-                        <span class="sr-only">Include Transfer Fee</span>
-                    </label>
-                </div>
-
-                <div class="form-control" id="transfer-type-select" style="display: none;">
-                    <label class="label">
-                        <span class="label-text text-lg">Transfer Type</span>
-                    </label>
-                    <select id="transfer-type" class="select select-bordered w-full text-lg">
-                        <option value="card" selected>Debit card withdrawal</option>
-                        <option value="us_bank">US Bank account</option>
-                        <option value="intl_bank">International bank account</option>
-                    </select>
-                </div>
-
-                <!-- Rounding Precision -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text text-lg">Rounding Precision</span>
-                    </label>
-                    <input type="number" id="rounding-precision" class="input input-bordered w-full text-lg" placeholder="Enter precision (e.g., 5 or 10)" value="5" min="1">
-                </div>
-            </form>
-        </div>
-
-        <!-- Right Panel -->
-        <div class="flex-1 p-8 overflow-y-auto">
-            <!-- Header Section -->
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="text-3xl font-bold">PayPal Fee Calculator</h3>
-                <div class="dropdown dropdown-end">
-                    <label tabindex="0" class="btn btn-ghost btn-circle">
-                        <!-- Optionally, insert an icon here -->
-                    </label>
-                    <!-- Optionally, dropdown content here -->
-                </div>
-            </div>
-            <div class="mb-8 text-lg">
-                <p>Calculate how much you need to charge your payee via PayPal if you want to get no less than a certain amount.</p>
-                <p>This utility calculates PayPal Fees using the latest rules as of
-                    <a href="https://www.paypal.com/us/legalhub/paypal/archive-policies-full?country.x=US&locale.x=en_US" target="_blank" rel="noopener" class="tooltip" data-tip="PayPal.com">
-                        December 2024
-                        <svg class="w-4 h-4 inline-block ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="currentColor" d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="w-full min-h-screen bg-gradient-to-br from-base-300 to-base-200 hero-pattern relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
+            <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+                        Never Lose Money on PayPal Fees Again
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-base-content/80 leading-relaxed">
+                        Calculate exactly how much to charge your clients to receive your desired amount.
+                        Our calculator factors in PayPal fees and transfer costs, ensuring you get
+                        <span class="text-primary font-semibold">the exact amount you want</span> - not a penny less.
+                    </p>
+                    <a href="#calculatorForm" class="btn btn-primary btn-lg gap-2 shadow-lg hover:shadow-primary/50 transition-all duration-300">
+                        Calculate Now
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                         </svg>
                     </a>
-                </p>
-            </div>
-
-            <!-- Results Section -->
-            <div class="grid grid-cols-3 gap-6 mb-8">
-                <!-- Gross Amount Column -->
-                <div class="flex flex-col">
-                    <div class="result-card stats shadow bg-primary text-primary-content">
-                        <div class="stat">
-                            <div class="stat-title text-2xl font-bold text-primary-content/90">Gross Amount</div>
-                            <div class="result stat-value text-4xl number-field" id="gross-amount">-</div>
-                        </div>
-                    </div>
-                    <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">
-                        <p class="text-sm">This is the amount you should charge your payee.</p>
-                    </div>
-                </div>
-
-                <!-- Total Fees Column -->
-                <div class="flex flex-col">
-                    <div class="result-card stats shadow bg-secondary text-secondary-content">
-                        <div class="stat">
-                            <div class="stat-title text-2xl font-bold text-secondary-content/90">Total Fees</div>
-                            <div class="result stat-value text-4xl number-field" id="total-fees">-</div>
-                        </div>
-                    </div>
-                    <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">
-                        <p class="text-sm">The total fees charged by PayPal.</p>
-                    </div>
-                </div>
-
-                <!-- Net Amount Column -->
-                <div class="flex flex-col">
-                    <div class="result-card stats shadow bg-accent text-accent-content">
-                        <div class="stat">
-                            <div class="stat-title text-2xl font-bold text-accent-content/90">Net Amount</div>
-                            <div class="result text-4xl number-field" id="net-amount">-</div>
-                        </div>
-                    </div>
-                    <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">
-                        <p class="text-sm">The amount you will receive after fees.</p>
-                    </div>
                 </div>
             </div>
+            <!-- Decorative Elements -->
+            <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-base-200 to-transparent"></div>
+        </section>
 
-            <!-- Fee Breakdown -->
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title text-2xl mb-6">Fee Breakdown</h2>
-                    <div class="space-y-4 text-lg">
-                        <div class="flex justify-between items-center border-b border-gray-300 pb-2 dark:border-gray-600">
-                            <span class="font-medium">Percentage Fee:</span>
-                            <span id="percentage-fee" class="text-xl number-field">-</span>
+        <div class="flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
+            <!-- Left Sidebar -->
+            <div class="w-full md:w-96 bg-base-300 p-4 md:p-6 border-b md:border-r border-base-content/10 overflow-y-auto">
+                <h2 class="text-2xl font-bold mb-4 md:mb-6 text-primary">Parameters</h2>
+
+                <form id="calculatorForm" class="space-y-6 scroll-margin">
+                    <!-- Amount Input -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-lg">Desired Net Amount</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-addon px-4 bg-base-200 text-lg" id="currency-symbol">$</span>
+                            <input type="number" id="amount" class="input input-bordered w-full text-lg" placeholder="Enter amount" step="0.01" min="0">
                         </div>
-                        <div class="flex justify-between items-center border-b border-gray-300 pb-2 dark:border-gray-600">
-                            <span class="font-medium">Fixed Fee:</span>
-                            <span id="fixed-fee" class="text-xl number-field">-</span>
+                    </div>
+
+                    <!-- Country Selector -->
+                    <div class="form-control">
+                        <label class="label" for="country">
+                            <span class="label-text text-lg">Merchant Country</span>
+                        </label>
+                        <select id="country" class="select select-bordered w-full text-lg" aria-label="Select merchant country">
+                            <option value="" disabled selected>Select country</option>
+                        </select>
+                    </div>
+
+                    <!-- Currency Selector -->
+                    <div class="form-control">
+                        <label class="label" for="currency">
+                            <span class="label-text text-lg">Currency</span>
+                        </label>
+                        <select id="currency" class="select select-bordered w-full text-lg" aria-label="Select currency">
+                            <option value="" disabled selected>Select currency</option>
+                        </select>
+                    </div>
+
+                    <!-- Transaction Type -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-lg">Transaction Type</span>
+                        </label>
+                        <div class="flex gap-4">
+                            <label class="cursor-pointer label justify-start gap-2">
+                                <input type="radio" name="transaction-type" class="radio radio-primary" value="domestic"
+                                    checked>
+                                <span class="label-text text-lg">Domestic</span>
+                            </label>
+                            <label class="cursor-pointer label justify-start gap-2">
+                                <input type="radio" name="transaction-type" class="radio radio-primary"
+                                    value="international">
+                                <span class="label-text text-lg">International</span>
+                            </label>
                         </div>
-                        <div class="flex justify-between items-center border-b border-gray-300 pb-2 dark:border-gray-600">
-                            <span class="font-medium">Transfer Fee:</span>
-                            <span id="transfer-fee" class="text-xl number-field">-</span>
+                    </div>
+
+                    <!-- Transfer Fee -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-lg">Include Transfer Fee?</span>
+                            <span class="tooltip tooltip-info" data-tip="Additional fee for withdrawing money from PayPal">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    class="w-4 h-4 stroke-current">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <label class="cursor-pointer label justify-start gap-2">
+                            <input type="checkbox" id="include-transfer-fee" class="toggle toggle-primary" />
+                            <span class="sr-only">Include Transfer Fee</span>
+                        </label>
+                    </div>
+
+                    <div class="form-control" id="transfer-type-select" style="display: none;">
+                        <label class="label">
+                            <span class="label-text text-lg">Transfer Type</span>
+                        </label>
+                        <select id="transfer-type" class="select select-bordered w-full text-lg">
+                            <option value="card" selected>Debit card withdrawal</option>
+                            <option value="us_bank">US Bank account</option>
+                            <option value="intl_bank">International bank account</option>
+                        </select>
+                    </div>
+
+                    <!-- Rounding Precision -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text text-lg">Rounding Precision</span>
+                        </label>
+                        <input type="number" id="rounding-precision" class="input input-bordered w-full text-lg" placeholder="Enter precision (e.g., 5 or 10)" value="5" min="1">
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="flex-1 p-8 overflow-y-auto">
+                <!-- Header Section -->
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-3xl font-bold">PayPal Fee Calculator</h3>
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-circle">
+                            <!-- Optionally, insert an icon here -->
+                        </label>
+                        <!-- Optionally, dropdown content here -->
+                    </div>
+                </div>
+                <div class="mb-8 text-lg">
+                    <p>Calculate how much you need to charge your payee via PayPal if you want to get no less than a certain amount.</p>
+                    <p>This utility calculates PayPal Fees using the latest rules as of
+                        <a href="https://www.paypal.com/us/legalhub/paypal/archive-policies-full?country.x=US&locale.x=en_US" target="_blank" rel="noopener" class="tooltip" data-tip="PayPal.com">
+                            December 2024
+                            <svg class="w-4 h-4 inline-block ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path fill="currentColor" d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
+                            </svg>
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Results Section -->
+                <div class="grid grid-cols-3 gap-6 mb-8">
+                    <!-- Gross Amount Column -->
+                    <div class="flex flex-col">
+                        <div class="result-card stats shadow bg-primary text-primary-content">
+                            <div class="stat">
+                                <div class="stat-title text-2xl font-bold text-primary-content/90">Gross Amount</div>
+                                <div class="result stat-value text-4xl number-field" id="gross-amount">-</div>
+                            </div>
                         </div>
-                        <div class="flex justify-between items-center border-b border-gray-300 pb-2 dark:border-gray-600">
-                            <span class="font-medium">Rounded Gross Amount:</span>
-                            <span id="rounded-gross-amount" class="text-xl number-field">-</span>
+                        <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">
+                            <p class="text-sm">This is the amount you should charge your payee.</p>
+                        </div>
+                    </div>
+
+                    <!-- Total Fees Column -->
+                    <div class="flex flex-col">
+                        <div class="result-card stats shadow bg-secondary text-secondary-content">
+                            <div class="stat">
+                                <div class="stat-title text-2xl font-bold text-secondary-content/90">Total Fees</div>
+                                <div class="result stat-value text-4xl number-field" id="total-fees">-</div>
+                            </div>
+                        </div>
+                        <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">
+                            <p class="text-sm">The total fees charged by PayPal.</p>
+                        </div>
+                    </div>
+
+                    <!-- Net Amount Column -->
+                    <div class="flex flex-col">
+                        <div class="result-card stats shadow bg-accent text-accent-content">
+                            <div class="stat">
+                                <div class="stat-title text-2xl font-bold text-accent-content/90">Net Amount</div>
+                                <div class="result text-4xl number-field" id="net-amount">-</div>
+                            </div>
+                        </div>
+                        <div class="result-description p-4 bg-gray-800 text-white rounded-md mt-4">
+                            <p class="text-sm">The amount you will receive after fees.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fee Breakdown -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-2xl mb-6">Fee Breakdown</h2>
+                        <div class="space-y-4 text-lg">
+                            <div class="flex justify-between items-center border-b border-gray-300 pb-2 dark:border-gray-600">
+                                <span class="font-medium">Percentage Fee:</span>
+                                <span id="percentage-fee" class="text-xl number-field">-</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-gray-300 pb-2 dark:border-gray-600">
+                                <span class="font-medium">Fixed Fee:</span>
+                                <span id="fixed-fee" class="text-xl number-field">-</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-gray-300 pb-2 dark:border-gray-600">
+                                <span class="font-medium">Transfer Fee:</span>
+                                <span id="transfer-fee" class="text-xl number-field">-</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-gray-300 pb-2 dark:border-gray-600">
+                                <span class="font-medium">Rounded Gross Amount:</span>
+                                <span id="rounded-gross-amount" class="text-xl number-field">-</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="config.js" type="module"></script>
-    <script src="app.js" type="module"></script>
+        <!-- Legal Footer -->
+        <footer class="py-8 px-4 mt-16 border-t border-base-content/10">
+            <div class="container mx-auto">
+                <div class="text-xs text-base-content/60 max-w-4xl mx-auto text-center space-y-2">
+                    <p>PayPal is a registered trademark of PayPal, Inc. All other company and product names may be trademarks of the respective companies with which they are associated.</p>
+                    <p>This calculator is for informational purposes only and is not affiliated with, endorsed by, or in any way officially connected with PayPal or any of its subsidiaries or affiliates.</p>
+                    <p>The PayPal name and related trademarks are used solely for the purpose of identifying the services calculated by this tool. No affiliation or endorsement is intended or implied.</p>
+                    <p>Fee calculations are based on publicly available information and may not reflect current rates. Always verify actual fees through your PayPal account.</p>
+                    <p class="mt-4">&copy; 2024 PayPal Fee Calculator. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Add Smooth Scroll Behavior -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                const headerOffset = 200;
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            });
+        });
+    </script>
+
+    <script src="js/config.js" type="module"></script>
+    <script src="js/app.js" type="module"></script>
 </body>
 
 </html>
